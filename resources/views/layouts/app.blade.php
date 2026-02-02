@@ -18,6 +18,15 @@
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+
+    <style>
+.ts-dropdown {
+    z-index: 9999 !important;
+}
+</style>
+
+
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
@@ -26,6 +35,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script>
         // Configure Toastr defaults
         toastr.options = {
@@ -56,7 +66,19 @@
             userId: {{ auth()->id() }},
             csrfToken: "{{ csrf_token() }}"
         };
+
+        document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.tom-select').forEach((select) => {
+        new TomSelect(select, {
+            create: false,
+            sortField: 'text',
+            dropdownParent: 'body',
+        });
+    });
+});
+
     </script>
+
     @endif
     @yield('scripts')
 </body>

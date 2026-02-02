@@ -111,25 +111,5 @@
 @endsection
 
 @section('scripts')
-<!-- Tom Select -->
-<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
-<style>
-.ts-dropdown {
-    z-index: 9999 !important;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.tom-select').forEach((select) => {
-        new TomSelect(select, {
-            create: false,
-            sortField: 'text',
-            dropdownParent: 'body',
-        });
-    });
-});
-</script>
 @endsection

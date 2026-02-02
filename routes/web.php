@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\PettyCashController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ProjectController;
@@ -14,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function() {
+Route::get('/test', function () {
     return 'Laravel works!';
 });
 
@@ -79,4 +80,25 @@ Route::middleware(['auth'])->group(function () {
     Route::get('permissions/{id}/edit', [RolePermissionController::class, 'editPermission'])->name('admin.permissions.edit');
     Route::put('permissions/{id}', [RolePermissionController::class, 'updatePermission'])->name('admin.permissions.update');
     Route::delete('permissions/{id}', [RolePermissionController::class, 'deletePermission'])->name('admin.permissions.delete');
+
+
+    // User routes
+    Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves.index');
+    Route::get('/leaves/create', [LeaveController::class, 'create'])->name('leaves.create');
+    Route::post('/leaves', [LeaveController::class, 'store'])->name('leaves.store');
+
+    // Admin routes (approval, balance management)
+    Route::middleware(['can:approve leave'])->group(function () {
+        Route::get('/leaves/pending', [LeaveController::class, 'pending'])->name('leaves.pending');
+        Route::post('/leaves/{leave}/approve', [LeaveController::class, 'approve'])->name('leaves.approve');
+        Route::post('/leaves/{leave}/reject', [LeaveController::class, 'reject'])->name('leaves.reject');
+
+        Route::get('/leave-apply', [LeaveController::class, 'apply'])->name('leaves.apply');
+        Route::post('/leave-apply', [LeaveController::class, 'store'])->name('leaves.apply.store');
+        Route::get('/leave-history', [LeaveController::class, 'history'])->name('leaves.history');
+        Route::get('/leave-manage', [LeaveController::class, 'manageUpdate'])->name('leaves.manage');
+        Route::get('/leave-balances', [LeaveController::class, 'adjustForm'])->name('leave_balances.index');
+        Route::get('/leave-balances/{user}/edit', [LeaveController::class, 'edit'])->name('leave_balances.edit');
+        Route::post('/leave-balances/update', [LeaveController::class, 'adjustUpdate'])->name('leave.adjust.update');
+    });
 });

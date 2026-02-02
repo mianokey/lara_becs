@@ -13,32 +13,32 @@
         </div>
     </div>
 
-{{-- User Section --}}
-<div class="px-6 py-4 border-b border-gray-100">
-    <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white font-semibold">
-            {{ strtoupper(substr(Auth::user()->first_name ?? 'U', 0, 1)) }}
-        </div>
-        <div>
-            <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name ?? 'Guest' }}</p>
-            <p class="text-xs text-gray-500 capitalize">{{ Auth::user()->getRoleNames()->first() ?? 'User' }}</p>
+    {{-- User Section --}}
+    <div class="px-6 py-4 border-b border-gray-100">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white font-semibold">
+                {{ strtoupper(substr(Auth::user()->first_name ?? 'U', 0, 1)) }}
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name ?? 'Guest' }}</p>
+                <p class="text-xs text-gray-500 capitalize">{{ Auth::user()->getRoleNames()->first() ?? 'User' }}</p>
 
-            @php
+                @php
                 $phone = Auth::user()->detail('whatsapp') ?? null;
                 if ($phone && strlen($phone) >= 7) {
-                    // Mask the middle 3 digits
-                    $maskedPhone = substr($phone, 0, 4) . '***' . substr($phone, -3);
+                // Mask the middle 3 digits
+                $maskedPhone = substr($phone, 0, 4) . '***' . substr($phone, -3);
                 } else {
-                    $maskedPhone = null;
+                $maskedPhone = null;
                 }
-            @endphp
+                @endphp
 
-            @if($maskedPhone)
+                @if($maskedPhone)
                 <p class="text-xs text-gray-500">{{ $maskedPhone }}</p>
-            @endif
+                @endif
+            </div>
         </div>
     </div>
-</div>
 
 
     {{-- Navigation --}}
@@ -112,8 +112,8 @@
         </div>
         @endrole
 
-        
-          <div x-data="{ open: false }" class="space-y-1">
+
+        <div x-data="{ open: false }" class="space-y-1">
             <!-- Menu Title -->
             <button @click="open = !open"
                 class="w-full flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 focus:outline-none">
@@ -137,14 +137,52 @@
                 {{-- Add more submenu items if needed, like Reports or Approvals --}}
             </div>
         </div>
+
+        <div x-data="{ open: false }" class="space-y-1">
+            <!-- Menu Title -->
+            <button @click="open = !open"
+                class="w-full flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 focus:outline-none">
+                <span>📝 Leave Management</span>
+                <svg :class="{ 'rotate-90': open }" class="w-4 h-4 transition-transform" fill="none"
+                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <!-- Submenu -->
+            <div x-show="open" x-cloak x-collapse class="pl-4 space-y-1">
+                <!-- User routes -->
+                <a href="{{ route('leaves.history') }}"
+                    class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                    📄 My Leaves
+                </a>
+                <a href="{{ route('leaves.apply') }}"
+                    class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                    ➕ Apply for Leave
+                </a>
+
+                <!-- Admin routes -->
+                @can('approve leave')
+                <a href="{{ route('leaves.manage') }}"
+                    class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                    ⏳ Pending Approvals
+                </a>
+                <a href="{{ route('leave_balances.index') }}"
+                    class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                    ⚙️ Leave Bal Adj.
+                </a>
+                @endcan
+            </div>
+        </div>
+
         <a class="block px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700">
             <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="w-full text-left text-black-600 hover:text-red-800 text-sm">
-                🔒 Logout
-            </button>
-        </form>
-    </a>
+                @csrf
+                <button type="submit" class="w-full text-left text-black-600 hover:text-red-800 text-sm">
+                    🔒 Logout
+                </button>
+            </form>
+        </a>
     </nav>
 
 </div>
